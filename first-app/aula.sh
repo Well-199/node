@@ -1,1 +1,1 @@
-Instalando o Typescript no projeto
+Entendendo import/export em ES6
