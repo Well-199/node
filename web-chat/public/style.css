@@ -44,7 +44,28 @@ ul, li{
 
 .chatList{
     flex: 1;
-    background-color: #FFF;    
+    background-color: #FFF;   
+    overflow-y: scroll;
+    max-height: calc(100vh - 60px); 
+}
+
+.chatList li{
+    padding: 3px;
+    font-size: 20px;
+}
+
+.chatList li.m-status{
+    color: #333;
+    font-style: italic;
+}
+
+.chatList li.m-txt span{
+    font-weight: bold;
+    color: #0000FF
+}
+
+.chatList li.m-txt span.me{
+    color: #FF0000;
 }
 
 .userList{
