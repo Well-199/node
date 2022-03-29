@@ -24,7 +24,25 @@ io.on('connection', (socket) => {
 
         console.log(connectedUsers)
 
+        // envia mensagem para o usuario que fez a conexão
         socket.emit('user-ok', connectedUsers)
+
+        // envia mensagem todos os usuarios conectados
+        socket.broadcast.emit('list-update', {
+            joined: username,
+            list: connectedUsers
+        })
+
+        // remove do array o usuario que desconectou
+        socket.on('disconnect', () => {
+            connectedUsers = connectedUsers.filter(user => user != socket.username)
+
+            // envia a nova lista de usuarios
+            socket.broadcast.emit('list-update', {
+                left: socket.username,
+                list: connectedUsers
+            })
+        })
     })
 })
 
