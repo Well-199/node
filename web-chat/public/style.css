@@ -16,7 +16,7 @@ ul, li{
 }
 
 #loginPage{
-    display: flex;
+    display: none; /* flex */
     background-color: #FFF;
 }
 
@@ -32,14 +32,14 @@ ul, li{
 }
 
 #chatPage{
-    display: none;
+    display: flex; /* none */
 }
 
 .chatArea{
     flex: 1;
     width: 100%;
-    display: flex;
-    background-color: #CCC;
+    display: flex; /* none */
+    background-color: #FFF;
 }
 
 .chatList{
@@ -48,8 +48,16 @@ ul, li{
 }
 
 .userList{
-    width: 200px;
+    width: 300px;
     background-color: #CCC;
+    overflow-y: scroll;
+    max-height: calc(100vh - 60px);
+}
+
+.userList li{
+    padding: 5px;
+    font-size: 20px;
+    
 }
 
 .chatInput{
@@ -59,7 +67,7 @@ ul, li{
 
 #chatTextInput{
     flex: 1;
-    height: 40px;
+    height: 60px;
     padding: 0 10px;
     font-size: 15px;
     background-color: #CCC;
