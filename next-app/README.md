@@ -1,2 +1,2 @@
-#### Navegando entre páginas no NextJS
+#### Páginas Dinâmicas
 
