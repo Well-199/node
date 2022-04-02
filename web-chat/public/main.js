@@ -29,8 +29,16 @@ function addMessage(type, user, msg) {
             ul.innerHTML += `<li class="m-status">${msg}</li>`
         break
         case 'msg':
-            ul.innerHTML += `<li class="m-txt"><span class="me">${user}</span>${msg}</li>`
+            if(username === user){
+                ul.innerHTML += `<li class="m-txt"><span class="me">${user}</span> ${msg}</li>`
+            }
+            else{
+                ul.innerHTML += `<li class="m-txt"><span>${user}</span> ${msg}</li>`
+            }
+        break
     }
+
+    ul.scrollTop = ul.scrollHeight
 }
 
 loginInput.addEventListener('keyup', (e) => {
@@ -86,3 +94,10 @@ socket.on('show-msg', (data) => {
     addMessage('msg', data.username, data.message)
 })
 
+socket.on('disconnect', () => {
+    addMessage('status', null, 'Voçe foi desconectado')
+})
+
+socket.on('connect_error', () => {
+    addMessage('status', null, 'Tentando nova conexão')
+})
