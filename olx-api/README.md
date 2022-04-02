@@ -1,1 +1,33 @@
-#### Configurando o servidor ver projeto milenium api para conexão com mongoDB
+#### Criando os Models
+
+
+# users
++ id
++ name
++ email
++ state
++ passwordHash
++ token
+
+# states
++ id
++ name
+
+# categories
++ id
++ name
++ slug
+
+# ads
++ id
++ idUser
++ state
++ category
++ images [{url, default: true}]
++ dateCreated
++ title
++ price
++ priceNegotiable: true
++ description
++ views
++ status
