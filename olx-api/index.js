@@ -4,7 +4,7 @@ const connection = require('./src/connection/mongodb')
 const cors = require('cors')
 const fileupload = require('express-fileupload')
 
-// routes
+const routes = require('./src/routes/routes')
 
 connection()
 
@@ -23,11 +23,7 @@ server.use((req, res, next) => {
     next()
 })
 
-//server.use('/api', routes)
-
-server.get('/ping', (req, res) => {
-    res.json({ pong: true })
-})
+server.use('/api', routes)
 
 server.use((req, res) => {
     res.status(404)
