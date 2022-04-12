@@ -26,6 +26,19 @@ const AuthValidator = {
             notEmpty: true,
             errorMessage: 'Estado não preenchido'
         }
+    }),
+    signin: checkSchema({
+        email: {
+            isEmail: true,
+            normalizeEmail: false,
+            errorMessage: 'E-mail inválido'
+        },
+        password: {
+            isLength: {
+                options: { min: 2 }
+            },
+            errorMessage: 'Senha precisar ter pelo menos 2 caracteres'
+        }
     })
 }
 
