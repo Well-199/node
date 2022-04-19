@@ -33,7 +33,7 @@ const Auth = {
 
         // se não foi encontrado um token igual no banco paro a requisiçao aqui
         if(!user){
-            res.json({notallowed: true})
+            res.json({notallowed: "token invalido"})
             return
         }
 

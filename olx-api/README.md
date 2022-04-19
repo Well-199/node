@@ -1,4 +1,4 @@
-#### Pegando informações do usuário
+#### Listando as categorias
 
 # users
 + id
