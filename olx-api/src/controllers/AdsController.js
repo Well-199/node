@@ -84,11 +84,37 @@ const AdsController = {
             // Verifica se veio uma ou mais de uma imagem
             if(req.files.img.length == undefined){
 
+                if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img.mimetype)){
+                        
+                    // url recebe o retorno do nome da imagem gerado
+                    let url = await addImage(req.files.img.data)
+                    newAd.images.push({
+                        url: url,
+                        default: false
+                    })
+                }
             }
             else{
+                // mais de uma imagem
+                for(let i=0; i < req.files.img.length; i++){
+
+                    if(['image/jpeg', 'image/jpg', 'image/png'].includes(req.files.img[i].mimetype)){
+                        
+                        // url recebe o retorno do nome da imagem gerado
+                        let url = await addImage(req.files.img[i].data)
+                        newAd.images.push({
+                            url: url,
+                            default: false
+                        })
+                    }
+                }
 
             }
 
+        }
+
+        if(newAd.images.length > 0){
+            newAd.images[0].default = true
         }
 
         const info = await newAd.save()
