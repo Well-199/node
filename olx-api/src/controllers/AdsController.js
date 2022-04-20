@@ -2,6 +2,26 @@ const Category = require('../models/Category')
 const User = require('../models/User')
 const Ad = require('../models/Ad')
 
+const { v4: uuid } = require('uuid')
+const jimp = require('jimp')
+
+// Manipula a imagem
+const addImage = async (buffer) => {
+
+    // gera um nome aleatorio para a imagem
+    let newName = `${uuid()}.jpg`
+
+    // A Lib jimp faz a leitura do buffer
+    let tmpImg = await jimp.read(buffer)
+
+    // Redimensiona a imagem e altera a qualidade sem distorcer a imagem
+    // E escreve ou armazena a imagem na pasta images com novo nome
+    tmpImg.cover(500, 500).quality(80).write(`./public/images/${newName}`)
+
+    // retorna o nome ou caminho da imagem para ser armazenado no banco
+    return newName
+}
+
 const AdsController = {
 
     async getCategories (req, res){
@@ -58,7 +78,22 @@ const AdsController = {
         newAd.description = desc
         newAd.views = 0
 
-        res.json({data: newAd})
+        // Verifica se veio imagens
+        if(req.files && req.files.img){
+
+            // Verifica se veio uma ou mais de uma imagem
+            if(req.files.img.length == undefined){
+
+            }
+            else{
+
+            }
+
+        }
+
+        const info = await newAd.save()
+
+        res.json({data: info._id})
     },
 
     async getList (req, res){
