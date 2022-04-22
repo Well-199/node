@@ -1,4 +1,4 @@
-#### Listando anúncios (1/2)
+#### Exibindo um anúncio (1/2)
 
 # users
 + id
