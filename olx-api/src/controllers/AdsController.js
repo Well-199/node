@@ -3,6 +3,8 @@ const State = require('../models/State')
 const User = require('../models/User')
 const Ad = require('../models/Ad')
 
+const mongoose = require('mongoose')
+
 const { v4: uuid } = require('uuid')
 const jimp = require('jimp')
 
@@ -185,7 +187,56 @@ const AdsController = {
 
     async getItem (req, res){
 
-        res.json("ok")
+        let { id, other = null } = req.query
+
+        if(!id){
+            res.json({error: "ID do produto não enviado"})
+            return
+        }
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            res.json({error: "ID invalido"})
+            return
+        }
+
+        const ad = await Ad.findById(id)
+
+        if(!ad){
+            res.json({error: "Produto não encontrado"})
+            return
+        }
+
+        ad.views++
+        await ad.save()
+
+        let images = []
+
+        console.log(ad)
+        
+        for(let i in ad.images){
+            images.push(`${process.env.BASE}/images/${ad.images[i].url}`)
+        }
+
+        const category = await Category.findById(ad.category).exec()
+        const userInfo = await User.findById(ad.idUser).exec()
+        const stateInfo = await State.findById(ad.state).exec()
+
+        let json = {
+            id: ad._id,
+            title: ad.title,
+            price: ad.price,
+            priceNegotiable: ad.priceNegotiable,
+            description: ad.description,
+            dateCreated: ad.dateCreated,
+            views: ad.views,
+            images: images,
+            category: category.name,
+            user: userInfo.name,
+            email: userInfo.email,
+            state: stateInfo.name
+        }
+        
+        res.json({data: json})
     },
 
     async editAction (req, res){
