@@ -1,4 +1,4 @@
-#### Exibindo um anúncio (2/2)
+#### Novas imagens na atualização
 
 # users
 + id

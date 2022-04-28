@@ -210,8 +210,6 @@ const AdsController = {
         await ad.save()
 
         let images = []
-
-        console.log(ad)
         
         for(let i in ad.images){
             images.push(`${process.env.BASE}/images/${ad.images[i].url}`)
@@ -220,6 +218,33 @@ const AdsController = {
         const category = await Category.findById(ad.category).exec()
         const userInfo = await User.findById(ad.idUser).exec()
         const stateInfo = await State.findById(ad.state).exec()
+
+        let others = []
+
+        if(other){
+            const otherData = await Ad.find({status: true, idUser: ad.idUser}).exec()
+
+            for(let i in otherData){
+                if(otherData[i]._id.toString() != ad._id.toString()){
+
+                    let image = `${process.env.BASE}/images/default.jpg`
+
+                    let defaultImg = otherData[i].images.find(e => e.default)
+
+                    if(defaultImg){
+                        image = `${process.env.BASE}/images/${defaultImg.url}`
+                    }
+
+                    others.push({
+                        id: otherData[i]._id,
+                        title: otherData[i].title,
+                        price: otherData[i].price,
+                        priceNegotiable: otherData[i].priceNegotiable,
+                        image: image
+                    })
+                }
+            }
+        }
 
         let json = {
             id: ad._id,
@@ -233,7 +258,8 @@ const AdsController = {
             category: category.name,
             user: userInfo.name,
             email: userInfo.email,
-            state: stateInfo.name
+            state: stateInfo.name,
+            others: others
         }
         
         res.json({data: json})
@@ -241,7 +267,74 @@ const AdsController = {
 
     async editAction (req, res){
 
-        res.json("ok")
+        let id = req.params.id
+        let { title, price, desc, cat, images, token } = req.body
+        let status = (req.body.status=='true' ? true : false)
+        let priceneg = (req.body.priceneg=='true' ? true : false)
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            res.json({error: "ID invalido"})
+            return
+        }
+
+        const ad = await Ad.findById(id).exec()
+
+        if(!ad){
+            res.json({error: 'Anúncio inexistente'})
+            return
+        }
+
+        // busca o usuario
+        const user = await User.findOne({token}).exec()
+
+        // verifica se o id do usuario é igual ai idUser do anuncio
+        if(user._id.toString() !== ad.idUser){
+            res.json({error: 'Anuncio não encontrado'})
+            return
+        }
+
+        let updates = {}
+
+        if(title){
+            updates.title = title
+        }
+
+        if(price){
+            price = price.replace('.', '').replace(',','.').replace('R$ ')
+            price = parseFloat(price)
+            updates.price = price
+        }
+
+        if(priceneg){
+            updates.priceNegotiable = priceneg
+        }
+
+        if(status){
+            updates.status = status
+        }
+
+        if(desc){
+            updates.description = desc
+        }
+
+        if(cat){
+            const category = await Category.findOne({slug: cat}).exec()
+
+            if(!category){
+                res.json({error: 'Categoria inexistente'})
+                return
+            }
+
+            updates.category = category._id.toString()
+        }
+
+        if(images){
+            updates.images = images
+        }
+
+        await Ad.findByIdAndUpdate(id, {$set: updates})
+
+        res.json({data: true})
     }
 
 }
